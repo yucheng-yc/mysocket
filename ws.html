@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const ws=new WebSocket("ws://172.16.139.1:3300");
+        // 登录信息
+        const login={
+            id:10086,
+            pwd:'4654'
+        } 
+
+        // 传输对象
+        const tsObj={
+            code:1,
+            data:login
+        }
+        
+        // 获取在线列表
+        ws.onopen=function(){
+            ws.send(JSON.stringify(tsObj));
+        }
+        ws.onmessage=function(message){
+            message=JSON.parse(message.data)
+            console.log(message)
+            switch(message.code){
+                // 当501表示登录成功
+                case 501:
+                    console.log('登录成功');
+                    // 发送请求用来获取在线人员列表
+                    ws.send(JSON.stringify({code:2,data:{}}))
+                    break;
+                case 502:
+                console.log('在线列表返回');
+                console.log(message);
+
+            }
+
+            
+        }
+        
+    </script>
+</body>
+</html>
